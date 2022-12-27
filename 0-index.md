@@ -9,14 +9,17 @@
   - Composants monofichiers
   - API d'options et API de composition
   - Outils
-- Fondamentaux - Options API
-- Fondamentaux des composants
-- Composants monofichiers
+- Fondamentaux avec l'API d'options
+  - Syntaxe de template
+  - API d'options
+  - Liaisons de classes et de styles
+  - Attributs speciaux
+- Composants
 - Vue Router 4
-- API de composition
 - State management - Pinia
 - Directives personnalisées
-- Autres sujets
+- API de composition
+- Pour aller plus loin
   - VueUse
   - Jamstack (Static side generation)
   - Server side rendering - Nuxt

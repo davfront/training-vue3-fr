@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="todo.css">
+  <title>Todo list</title>
+</head>
+
+<body>
+  <div id="app">
+    <section class="todoapp">
+      <header class="header">
+        <h1>todos</h1>
+        <input
+          autofocus="autofocus"
+          autocomplete="off"
+          placeholder="What needs to be done?"
+          class="new-todo"
+          v-model="newTodo"
+          @keyup.enter="addTodo">
+      </header>
+      <template v-if="hasTodo">
+        <section class="main">
+          <input id="toggle-all" type="checkbox" class="toggle-all" @click="toggleAllTodos()" :checked="activeCount === 0">
+          <label for="toggle-all">Mark all as complete</label>
+          <ul class="todo-list">
+            <li
+              v-for="todo in filteredTodos"
+              :key="todo.id"
+              class="todo"
+              :class="{ 'completed': todo.completed, 'editing': isEditing(todo) }"
+              @dblclick="enableTodoEdition(todo)">
+              <div class="view">
+                <input type="checkbox" class="toggle" v-model="todo.completed">
+                <label>{{ todo.label }}</label>
+                <button class="destroy" @click="removeTodo(todo)"></button>
+              </div>
+              <input
+                type="text"
+                class="edit"
+                :ref="'editInput-' + todo.id"
+                v-model="newLabel"
+                @keyup.enter="updateEditingTodo()"
+                @blur="updateEditingTodo()"
+                @keyup.esc="disableTodoEdition()">
+            </li>
+          </ul>
+        </section>
+        <footer class="footer">
+          <span class="todo-count">
+            <strong>{{ activeCount }}</strong>
+            {{ activeCount > 1 ? 'items left' : 'item left' }}
+          </span>
+          <ul class="filters">
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'all' }"
+                @click.prevent="filter = 'all'">
+                All
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'active' }"
+                @click.prevent="filter = 'active'">
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'completed' }"
+                @click.prevent="filter = 'completed'">
+                Completed
+              </a>
+            </li>
+          </ul>
+          <button class="clear-completed" @click="removeCompletedTodos()">
+            Clear completed
+          </button>
+        </footer>
+      </template>
+    </section>
+    <footer class="info">
+      {{editingTodo}}
+      <p>Double-click to edit a todo</p>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/vue@3"></script>
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          todos: JSON.parse(localStorage.getItem("todos")) || [],
+          newTodo: "",
+          filter: "all",
+          editingTodo: null,
+          newLabel: ""
+        }
+      },
+      computed: {
+        maxId() {
+          return this.todos.reduce(
+            (maxId, todo) => Math.max(maxId, todo.id),
+            this.todos[0]?.id || 0
+          );
+        },
+        activeTodos() {
+          return this.todos.filter(todo => !todo.completed);
+        },
+        activeCount() {
+          return this.activeTodos.length;
+        },
+        completedTodos() {
+          return this.todos.filter(todo => todo.completed);
+        },
+        hasTodo() {
+          return this.todos.length > 0;
+        },
+        filteredTodos() {
+          if (this.filter === 'active')
+            return this.activeTodos;
+          if (this.filter === 'completed')
+            return this.completedTodos;
+          return this.todos;
+        }
+      },
+      methods: {
+        addTodo() {
+          let newTodo = this.newTodo;
+          newTodo = newTodo.split(' ').filter(Boolean).join(' ');
+          if (newTodo) {
+            this.todos.push({
+              id: this.maxId + 1,
+              label: newTodo,
+              completed: false
+            });
+            this.newTodo = "";
+          }
+        },
+        removeTodo(todo) {
+          const index = this.todos.findIndex(t => t.id === todo.id);
+          if (index > -1) {
+            this.todos.splice(index, 1);
+          }
+        },
+        removeCompletedTodos() {
+          this.completedTodos.forEach(this.removeTodo);
+        },
+        toggleAllTodos() {
+          if (this.activeCount > 1) {
+            this.activeTodos.forEach(todo => todo.completed = true);
+          } else {
+            this.completedTodos.forEach(todo => todo.completed = false);
+          }
+        },
+        enableTodoEdition(todo) {
+          this.editingTodo = todo;
+          this.newLabel = todo.label;
+          this.$nextTick(() => {
+            const inputEl = this.$refs['editInput-' + todo.id][0];
+            if (inputEl) {
+                inputEl.focus();
+            }
+          });
+        },
+        disableTodoEdition(tdo) {
+          this.editingTodo = null;
+          this.newLabel = "";
+        },
+        isEditing(todo) {
+          return this.editingTodo?.id === todo?.id;
+        },
+        updateEditingTodo() {
+          if (this.editingTodo) {
+            let newLabel = this.newLabel;
+            newLabel = newLabel.split(' ').filter(Boolean).join(' ');
+            if (newLabel) {
+              this.editingTodo.label = newLabel;
+            } else {
+              this.removeTodo(this.editingTodo);
+            }
+          }
+          this.disableTodoEdition();
+        }
+      },
+      watch: {
+        todos: {
+          deep: true,
+          handler(todos) {
+            localStorage.setItem("todos", JSON.stringify(todos));
+          }
+        }
+      }
+    });
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
