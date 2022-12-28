@@ -87,7 +87,6 @@
       </template>
     </section>
     <footer class="info">
-      {{editingTodo}}
       <p>Double-click to edit a todo</p>
     </footer>
   </div>
@@ -153,7 +152,7 @@
           this.completedTodos.forEach(this.removeTodo);
         },
         toggleAllTodos() {
-          if (this.activeCount > 1) {
+          if (this.activeCount > 0) {
             this.activeTodos.forEach(todo => todo.completed = true);
           } else {
             this.completedTodos.forEach(todo => todo.completed = false);
@@ -169,7 +168,7 @@
             }
           });
         },
-        disableTodoEdition(tdo) {
+        disableTodoEdition() {
           this.editingTodo = null;
           this.newLabel = "";
         },

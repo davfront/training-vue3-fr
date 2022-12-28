@@ -1,9 +1,6 @@
 # Introduction à Vue.js
 
-Sources :
-
-- [https://vuejs.org/guide/introduction.html](https://vuejs.org/guide/introduction.html)
-- [https://vuejs.org/guide/scaling-up/tooling.html](https://vuejs.org/guide/scaling-up/tooling.html)
+Voir : [Vue.js - Introduction](https://vuejs.org/guide/introduction.html)
 
 ## Présentation
 
@@ -163,6 +160,8 @@ export default function MyComponent() {
 L'API de composition permet une meilleure flexibilité et une meilleure lisibilité du code, mais peut être un peu plus complexe à apprendre pour les débutants. Vous pouvez utiliser l'une ou l'autre de ces APIs en fonction de vos préférences et de vos besoins. Toutefois, il est recommandé d'utiliser l'API de composition pour les nouveaux projets, car elle offre de nombreux avantages sur l'API d'options.
 
 ## Outils
+
+Voir : [Vue.js - Tooling](https://vuejs.org/guide/scaling-up/tooling.html)
 
 Les outils préconisés pour le développement d'une application Vue.js sont :
 
