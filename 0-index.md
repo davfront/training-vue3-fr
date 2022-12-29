@@ -9,7 +9,7 @@
   - Composants monofichiers
   - API d'options et API de composition
   - Outils
-- [Fondamentaux avec l'API d'options](/2-options-api.md)
+- [Fondamentaux avec l'API d'options](/2-essentials.md)
   - Syntaxe de template
   - API d'options
   - Liaisons de classes et de styles
@@ -17,12 +17,8 @@
 - [Structuration de l'application avec les composants Vue](/3-components.md)
   - Présentation
   - Composants monofichiers avec Vite
-  - Déclaration global ou local
-  - Props
-  - Events
-  - Héritage des attributs
-  - Slots
-  - Provide / inject
+  - Déclaration de composants
+  - Communication entre composants
 - API de composition
 - Routage avec Vue Router
 - State management avec Pinia
