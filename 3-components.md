@@ -1,3 +1,5 @@
+[← Sommaire](/0-index.md)
+
 # Structuration de l'application avec les composants Vue
 
 ## Présentation
@@ -22,7 +24,7 @@ Cela ressemble beaucoup à la manière dont nous imbriquons les éléments HTML 
 
 ## Composants monofichiers avec Vite
 
-Voir : [Single-File Components ](https://vuejs.org/guide/scaling-up/sfc.html)
+Voir : [Single-File Components](https://vuejs.org/guide/scaling-up/sfc.html)
 
 Le composant monofichier Vue (ou SFC pour Single-File Component) est un format de fichier spécial qui nous permet d'encapsuler le template, la logique et le style d'un composant Vue dans un seul fichier. Il utilise l'extension de fichier `*.vue`. Voici un exemple de SFC :
 
@@ -652,7 +654,6 @@ export default {
 }
 
 ```
-
 
 ##### Provide au niveau de l'App
 

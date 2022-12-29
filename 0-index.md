@@ -19,30 +19,17 @@
   - Composants monofichiers avec Vite
   - Déclaration de composants
   - Communication entre composants
-- API de composition
-- Routage avec Vue Router
-- State management avec Pinia
+- [API de composition](/4-composition-api.md)
+- [Routage avec Vue Router](/5-vue-router.md)
+- [State management avec Pinia](/6-pinia.md)
 - Pour aller plus loin
-  - Custom Directives
-  - Built-in components:
-    - Teleport
-    - Component
-    - Transition
-    - TransitionGroup
-    - KeepAlive
-    - Suspense & Async components
-  - VueUse
-  - Static side generation (Jamstack)
-  - Server side rendering
-  - TypeScript
-  - Tests
 
 ## Ressources
 
-- [Vue.js 3](https://vuejs.org)
-- [Vue Router](https://router.vuejs.org)
-- [Pinia](https://pinia.vuejs.org/)
-- [Vite](https://vitejs.dev/)
-- [NuxtJs](https://nuxtjs.org/)
-- [VueUse](https://vueuse.org/)
-- [VueAwesome](https://next.awesome-vue.js.org/)
+- [Vue.js](https://vuejs.org) - The Progressive JavaScript Framework
+- [Vue Router](https://router.vuejs.org) - The official router for Vue.js
+- [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
+- [Vite](https://vitejs.dev/) - Next Generation Frontend Tooling
+- [Nuxt](https://nuxt.com/) - The Intuitive Web Framework
+- [VueUse](https://vueuse.org/) - Collection of Vue Composition Utilities
+- [VueAwesome](https://next.awesome-vue.js.org/) - A curated list of awesome things related to Vue.js

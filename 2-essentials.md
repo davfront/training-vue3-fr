@@ -1,9 +1,8 @@
+[← Sommaire](/0-index.md)
+
 # Fondamentaux avec l'API d'options
 
-Sources :
-
-- [https://vuejs.org/guide/essentials/application.html](https://vuejs.org/guide/essentials/application.html)
-
+Voir : [https://vuejs.org/guide/essentials/application.html](https://vuejs.org/guide/essentials/application.html)
 
 ## Syntaxe de template
 
@@ -22,9 +21,6 @@ Il est possible d'utiliser des expresions javascript:
 {{ ok ? 'YES' : 'NO' }}
 {{ message.split('').reverse().join('') }}
 ```
-
-<div :id="`list-${id}`"></div>
-
 
 ### Directive `v-html`
 
