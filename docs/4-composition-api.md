@@ -1,5 +1,5 @@
 
-[← Sommaire](/0-index.md)
+[← Sommaire](0-index.md)
 
 # [Draft] API de composition
 

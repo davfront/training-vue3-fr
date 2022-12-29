@@ -1,28 +1,28 @@
 
-# Vue.js
+# Construisez des sites Web dynamiques avec Vue.js
 
 ## Sommaire
 
-- [Introduction et Outils](/1-introduction.md)
+- [Introduction et Outils](1-introduction.md)
   - Présentation
   - Un framework progressif
   - Composants monofichiers
   - API d'options et API de composition
   - Outils
-- [Fondamentaux avec l'API d'options](/2-essentials.md)
+- [Fondamentaux avec l'API d'options](2-essentials.md)
   - Syntaxe de template
   - API d'options
   - Liaisons de classes et de styles
   - Attributs speciaux
-- [Structuration de l'application avec les composants Vue](/3-components.md)
+- [Structuration de l'application avec les composants Vue](3-components.md)
   - Présentation
   - Composants monofichiers avec Vite
   - Déclaration de composants
   - Communication entre composants
-- [API de composition](/4-composition-api.md)
-- [Routage avec Vue Router](/5-vue-router.md)
-- [State management avec Pinia](/6-pinia.md)
-- Pour aller plus loin
+- [API de composition](4-composition-api.md)
+- [Routage avec Vue Router](5-vue-router.md)
+- [State management avec Pinia](6-pinia.md)
+- [Pour aller plus loin](7-misc.md)
 
 ## Ressources
 

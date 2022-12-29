@@ -1,4 +1,4 @@
-[← Sommaire](/0-index.md)
+[← Sommaire](0-index.md)
 
 # [Draft] Routage avec Vue Router
 
