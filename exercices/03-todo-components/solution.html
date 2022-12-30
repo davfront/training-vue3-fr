@@ -14,25 +14,32 @@
     <script>
       const TodoListItem = {
         template: `
-        <li
-          class="todo"
-          :class="{ 'completed': todo.completed, 'editing': isTodoEditing }"
-          @dblclick="enableEdition()">
-          <div class="view">
-            <input type="checkbox" class="toggle" v-model="todo.completed">
-            <label>{{ todo.label }}</label>
-            <button class="destroy" @click="removeTodo()"></button>
-          </div>
-          <input
-            type="text"
-            class="edit"
-            ref="editInput"
-            v-model="newLabel"
-            @keyup.enter="updateTodo()"
-            @blur="updateTodo()"
-            @keyup.esc="disableEdition()">
-        </li>
-      `,
+          <li
+            class="todo-list-item"
+            :class="{ completed: todo.completed, editing: isTodoEditing }"
+            @dblclick="enableEdition()"
+          >
+            <div class="view">
+              <input
+                type="checkbox"
+                class="toggle"
+                :checked="todo.completed"
+                @click="toggleTodoState()"
+              />
+              <label>{{ todo.label }}</label>
+              <button class="destroy" @click="removeTodo()"></button>
+            </div>
+            <input
+              type="text"
+              class="edit"
+              ref="editInput"
+              v-model="newLabel"
+              @keyup.enter="updateTodoLabel()"
+              @blur="updateTodoLabel()"
+              @keyup.esc="disableEdition()"
+            />
+          </li>
+        `,
         props: {
           todo: {
             type: Object,
@@ -42,152 +49,180 @@
         data() {
           return {
             isTodoEditing: false,
-            newLabel: "",
-          };
+            isTodoCompleted: false,
+            newLabel: ''
+          }
         },
         methods: {
           enableEdition() {
-            this.isTodoEditing = true;
-            this.newLabel = this.todo.label;
+            this.isTodoEditing = true
+            this.newLabel = this.todo.label
             this.$nextTick(() => {
-              const inputEl = this.$refs.editInput;
+              const inputEl = this.$refs.editInput
               if (inputEl) {
-                inputEl.focus();
+                inputEl.focus()
               }
-            });
-          },
-          updateTodo() {
-            if (this.isTodoEditing) {
-              let newLabel = this.newLabel;
-              newLabel = newLabel.split(" ").filter(Boolean).join(" ");
-              if (newLabel) {
-                this.todo.label = newLabel;
-              } else {
-                this.removeTodo();
-              }
-            }
-            this.disableEdition();
-          },
-          disableEdition() {
-            this.isTodoEditing = false;
-            this.newLabel = "";
+            })
           },
           removeTodo() {
-            this.$emit("remove-request");
+            this.$emit('remove-request', this.todo)
           },
-        },
+          updateTodoLabel() {
+            if (this.isTodoEditing) {
+              let newLabel = this.newLabel
+              newLabel = newLabel.split(' ').filter(Boolean).join(' ')
+              if (newLabel) {
+                this.$emit('update-request', {
+                  ...this.todo,
+                  label: newLabel
+                })
+              } else {
+                this.removeTodo()
+              }
+            }
+            this.disableEdition()
+          },
+          toggleTodoState() {
+            this.$emit('update-request', {
+              ...this.todo,
+              completed: !this.todo.completed
+            })
+          },
+          disableEdition() {
+            this.isTodoEditing = false
+            this.newLabel = ''
+          }
+        }
       };
 
       const TodoList = {
         template: `
-        <ul class="todo-list">
-          <todo-list-item
-            v-for="todo in todos"
-            :key="todo.id"
-            :todo="todo"
-            @remove-request="removeTodo(todo)"></todo-list-item>
-        </ul>
-      `,
+          <ul class="todo-list">
+            <todo-list-item
+              v-for="todo in todos"
+              :key="todo.id"
+              :todo="todo"
+              @remove-request="removeTodo"
+              @update-request="updateTodo"
+            ></todo-list-item>
+          </ul>
+        `,
         components: {
-          "todo-list-item": TodoListItem,
+          'todo-list-item': TodoListItem,
         },
         props: {
           todos: {
             type: Array,
-            default: () => [],
-          },
+            default: () => []
+          }
         },
         methods: {
           removeTodo(todo) {
-            this.$emit("remove-request", todo);
+            this.$emit('remove-request', todo)
           },
-        },
+          updateTodo(todo) {
+            this.$emit('update-request', todo)
+          }
+        }
       };
 
       const TodoFilter = {
         template: `
-        <ul class="filters">
-          <li>
-            <a
-              href="#"
-              :class="{ 'selected': filter === 'all' }"
-              @click.prevent="filter = 'all'">
-              All
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              :class="{ 'selected': filter === 'active' }"
-              @click.prevent="filter = 'active'">
-              Active
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              :class="{ 'selected': filter === 'completed' }"
-              @click.prevent="filter = 'completed'">
-              Completed
-            </a>
-          </li>
-        </ul>
-      `,
+          <ul class="filters">
+            <li>
+              <a
+                href="#"
+                :class="{ selected: filter === 'all' }"
+                @click.prevent="filter = 'all'"
+              >
+                All
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ selected: filter === 'active' }"
+                @click.prevent="filter = 'active'"
+              >
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ selected: filter === 'completed' }"
+                @click.prevent="filter = 'completed'"
+              >
+                Completed
+              </a>
+            </li>
+          </ul>
+        `,
         props: {
           modelValue: {
             type: String,
-            default: "all",
-          },
-          data() {
-            return {
-              filter: "",
-            };
-          },
-          watch: {
-            modelValue: {
-              immediate: true,
-              handler(newValue) {
-                this.filter = newValue;
-              },
-            },
-            filter(newValue) {
-              this.$emit("update:modelValue", newValue);
-            },
-          },
+            default: 'all'
+          }
         },
+        data() {
+          return {
+            filter: 'all'
+          }
+        },
+        watch: {
+          modelValue: {
+            immediate: true,
+            handler(newValue) {
+              this.filter = newValue
+            }
+          },
+          filter(newValue) {
+            this.$emit('update:modelValue', newValue)
+          }
+        }
       };
 
       const TodoNewForm = {
         template: `
-        <input
-          autofocus="autofocus"
-          autocomplete="off"
-          placeholder="What needs to be done?"
-          class="new-todo"
-          v-model="newTodo"
-          @keyup.enter="submit">
-      `,
+          <input
+            type="text"
+            autofocus="autofocus"
+            autocomplete="off"
+            placeholder="What needs to be done?"
+            class="new-todo"
+            v-model="newTodo"
+            @keyup.enter="submit"
+          />
+        `,
         data() {
           return {
-            newTodo: "",
-          };
+            newTodo: ''
+          }
         },
         methods: {
           reset() {
-            this.newTodo = "";
+            this.newTodo = ''
           },
           submit() {
-            this.$emit("submit", this.newTodo);
-            this.reset();
-          },
-        },
+            this.$emit('submit', this.newTodo)
+            this.reset()
+          }
+        }
       };
 
       const TodoToggleSwitch = {
         template: `
-        <input id="toggle-all" type="checkbox" class="toggle-all" @click="onClick()" :checked="checked">
-        <label for="toggle-all">Mark all as complete</label>
-      `,
+          <div>
+            <input
+              id="toggle-all"
+              type="checkbox"
+              class="toggle-all"
+              @click="onClick()"
+              :checked="checked"
+            />
+            <label for="toggle-all">Mark all as complete</label>
+          </div>
+        `,
         props: {
           checked: {
             type: Boolean,
@@ -196,9 +231,9 @@
         },
         methods: {
           onClick() {
-            this.$emit("click");
-          },
-        },
+            this.$emit('click')
+          }
+        }
       };
 
       const App = {
@@ -209,105 +244,117 @@
           "todo-filter": TodoFilter,
         },
         template: `
-        <section class="todoapp">
-          <header class="header">
-            <h1>todos</h1>
-            <todo-new-form @submit="addTodo($event)"></todo-new-form>
-          </header>
-          <template v-if="hasTodo">
-            <section class="main">
-              <todo-toggle-switch
-                :checked="activeCount === 0"
-                @click="toggleAllTodos()"
-              ></todo-toggle-switch>
-              <todo-list
-                :todos="filteredTodos"
-                @remove-request="removeTodo($event)"
-              ></todo-list>
-            </section>
-            <footer class="footer">
-              <span class="todo-count">
-                <strong>{{ activeCount }}</strong>
-                {{ activeCount > 1 ? 'items left' : 'item left' }}
-              </span>
-              <todo-filter v-model="filter"></todo-filter>
-              <button class="clear-completed" @click="removeCompletedTodos()">
-                Clear completed
-              </button>
-            </footer>
-          </template>
-        </section>
-        <footer class="info">
-          <p>Double-click to edit a todo</p>
-        </footer>
-      `,
+          <section class="todoapp">
+            <header class="header">
+              <h1>todos</h1>
+              <todo-new-form @submit="addTodo($event)"></todo-new-form>
+            </header>
+            <template v-if="hasTodo">
+              <section class="main">
+                <todo-toggle-switch
+                  :checked="activeCount === 0"
+                  @click="toggleAllTodos()"
+                ></todo-toggle-switch>
+                <todo-list
+                  :todos="filteredTodos"
+                  @remove-request="removeTodo"
+                  @update-request="updateTodo"
+                ></todo-list>
+              </section>
+              <footer class="footer">
+                <span class="todo-count">
+                  <strong>{{ activeCount }}</strong>
+                  {{ activeCount > 1 ? 'items left' : 'item left' }}
+                </span>
+                <todo-filter v-model="filter"></todo-filter>
+                <button class="clear-completed" @click="removeCompletedTodos()">
+                  Clear completed
+                </button>
+              </footer>
+            </template>
+          </section>
+          <footer class="info">
+            <p>Double-click to edit a todo</p>
+          </footer>
+        `,
         data() {
           return {
-            todos: JSON.parse(localStorage.getItem("todos")) || [],
-            filter: "all",
-          };
+            todos: JSON.parse(localStorage.getItem('todos')) || [],
+            filter: 'all'
+          }
         },
         computed: {
           maxId() {
             return this.todos.reduce(
               (maxId, todo) => Math.max(maxId, todo.id),
               this.todos[0]?.id || 0
-            );
+            )
           },
           activeTodos() {
-            return this.todos.filter((todo) => !todo.completed);
+            return this.todos.filter((todo) => !todo.completed)
           },
           activeCount() {
-            return this.activeTodos.length;
+            return this.activeTodos.length
           },
           completedTodos() {
-            return this.todos.filter((todo) => todo.completed);
+            return this.todos.filter((todo) => todo.completed)
           },
           hasTodo() {
-            return this.todos.length > 0;
+            return this.todos.length > 0
           },
           filteredTodos() {
-            if (this.filter === "active") return this.activeTodos;
-            if (this.filter === "completed") return this.completedTodos;
-            return this.todos;
-          },
+            if (this.filter === 'active') {
+              return this.activeTodos
+            }
+            if (this.filter === 'completed') {
+              return this.completedTodos
+            }
+            return this.todos
+          }
         },
         methods: {
           addTodo(label) {
-            label = label.split(" ").filter(Boolean).join(" ");
+            label = label.split(' ').filter(Boolean).join(' ')
             if (label) {
               this.todos.push({
                 id: this.maxId + 1,
                 label: label,
-                completed: false,
-              });
+                completed: false
+              })
             }
           },
           removeTodo(todo) {
-            const index = this.todos.findIndex((t) => t.id === todo.id);
+            const index = this.todos.findIndex((t) => t.id === todo.id)
             if (index > -1) {
-              this.todos.splice(index, 1);
+              this.todos.splice(index, 1)
             }
           },
           removeCompletedTodos() {
-            this.completedTodos.forEach(this.removeTodo);
+            this.completedTodos.forEach(this.removeTodo)
+          },
+          updateTodo(newTodo) {
+            const index = this.todos.findIndex((todo) => todo.id === newTodo.id)
+            if (index > -1) {
+              this.todos[index].label = newTodo.label
+              this.todos[index].completed = newTodo.completed
+            }
           },
           toggleAllTodos() {
             if (this.activeCount > 0) {
-              this.activeTodos.forEach((todo) => (todo.completed = true));
+              this.activeTodos.forEach((todo) => (todo.completed = true))
             } else {
-              this.completedTodos.forEach((todo) => (todo.completed = false));
+              this.completedTodos.forEach((todo) => (todo.completed = false))
             }
-          },
+          }
         },
         watch: {
           todos: {
             deep: true,
             handler(todos) {
-              localStorage.setItem("todos", JSON.stringify(todos));
-            },
-          },
-        },
+              localStorage.setItem('todos', JSON.stringify(todos))
+            }
+          }
+        }
       };
 
       Vue.createApp(App).mount("#app");
