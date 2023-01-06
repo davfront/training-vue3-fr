@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="todo.css">
+  <title>Todo list</title>
+</head>
+
+<body>
+  <div id="app">
+    <section class="todoapp">
+      <header class="header">
+        <h1>todo</h1>
+        <input
+          autofocus="autofocus"
+          autocomplete="off"
+          placeholder="What needs to be done?"
+          class="new-todo"
+          v-model="newTodo"
+          @keyup.enter="addTodo">
+      </header>
+      <template v-if="hasTodo">
+        <section class="main">
+          <input id="toggle-all" type="checkbox" class="toggle-all" @click="toggleAllTodos()" :checked="activeCount === 0">
+          <label for="toggle-all">Mark all as complete</label>
+          <ul class="todo-list">
+            <li
+              v-for="todo in filteredTodos"
+              :key="todo.id"
+              class="todo"
+              :class="{ 'completed': todo.completed, 'editing': isEditing(todo) }"
+              @dblclick="enableTodoEdition(todo)">
+              <div class="view">
+                <input type="checkbox" class="toggle" v-model="todo.completed">
+                <label>{{ todo.label }}</label>
+                <button class="destroy" @click="removeTodo(todo)"></button>
+              </div>
+              <input
+                type="text"
+                class="edit"
+                :ref="el => {editInputs[todo.id] = el }"
+                v-model="newLabel"
+                @keyup.enter="updateEditingTodo()"
+                @blur="updateEditingTodo()"
+                @keyup.esc="disableTodoEdition()">
+            </li>
+          </ul>
+        </section>
+        <footer class="footer">
+          <span class="todo-count">
+            <strong>{{ activeCount }}</strong>
+            {{ activeCount > 1 ? 'items left' : 'item left' }}
+          </span>
+          <ul class="filters">
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'all' }"
+                @click.prevent="filter = 'all'">
+                All
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'active' }"
+                @click.prevent="filter = 'active'">
+                Active
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                :class="{ 'selected': filter === 'completed' }"
+                @click.prevent="filter = 'completed'">
+                Completed
+              </a>
+            </li>
+          </ul>
+          <button class="clear-completed" @click="removeCompletedTodos()">
+            Clear completed
+          </button>
+        </footer>
+      </template>
+    </section>
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/vue@3"></script>
+  <script>
+    const { ref, reactive, computed, nextTick, watch } = Vue
+    const app = Vue.createApp({
+      setup() {
+
+        // data
+        const todos = ref([])
+        const newTodo = ref("")
+        const filter = ref("all")
+        const editingTodo = ref(null)
+        const newLabel = ref("")
+        const editInputs = ref({})
+
+        // computed
+        const hasTodo = computed(() => {
+          return todos.value.length > 0
+        })
+      
+        const maxId = computed(() => {
+          return todos.value.reduce(
+            (maxId, todo) => Math.max(maxId, todo.id),
+            todos.value[0]?.id || 0
+          )
+        })
+
+        const activeTodos = computed(() => {
+          return todos.value.filter(todo => !todo.completed);
+        })
+
+        const activeCount = computed(() => {
+          return activeTodos.value.length;
+        })
+
+        const completedTodos = computed(() => {
+          return todos.value.filter(todo => todo.completed);
+        })
+
+        const filteredTodos = computed(() => {
+          if (filter.value === 'active')
+            return activeTodos.value;
+          if (filter.value === 'completed')
+            return completedTodos.value;
+          return todos.value;
+        })
+
+        // methods
+        const addTodo = () => {
+          let newTodoLabel = newTodo.value;
+          newTodoLabel = newTodoLabel.split(' ').filter(Boolean).join(' ');
+          if (newTodoLabel) {
+            todos.value.push({
+              id: maxId.value + 1,
+              label: newTodoLabel,
+              completed: false
+            });
+            newTodo.value = "";
+          }
+        }
+
+        const removeTodo = (todo) => {
+          const index = todos.value.findIndex(t => t.id === todo.id);
+          if (index > -1) {
+            todos.value.splice(index, 1);
+          }
+        }
+
+        const removeCompletedTodos = () => {
+          completedTodos.value.forEach(removeTodo);
+        }
+
+        const toggleAllTodos = () => {
+          if (activeCount.value > 0) {
+            activeTodos.value.forEach(todo => todo.completed = true);
+          } else {
+            completedTodos.value.forEach(todo => todo.completed = false);
+          }
+        }
+        
+        const enableTodoEdition = (todo) => {
+          editingTodo.value = todo;
+          newLabel.value = todo.label;
+          nextTick(() => {
+            const inputEl = editInputs.value[todo.id];
+            if (inputEl) {
+                inputEl.focus();
+            }
+          });
+        }
+
+        const disableTodoEdition = () => {
+          editingTodo.value = null;
+          newLabel.value = "";
+        }
+
+        const isEditing = (todo) => {
+          return editingTodo.value?.id === todo?.id;
+        }
+
+        const updateEditingTodo = () => {
+          if (editingTodo.value) {
+            let newLabelValue = newLabel.value;
+            newLabelValue = newLabelValue.split(' ').filter(Boolean).join(' ');
+            if (newLabelValue) {
+              editingTodo.value.label = newLabelValue;
+            } else {
+              removeTodo(editingTodo.value);
+            }
+          }
+          disableTodoEdition();
+        }
+
+        todos.value = JSON.parse(localStorage.getItem("todos")) || [];
+
+        // watch
+        watch(
+          todos,
+          (newTodos) => {
+            localStorage.setItem("todos", JSON.stringify(newTodos));
+          },
+          { deep: true }
+        )
+
+        return {
+          todos,
+          newTodo,
+          filter,
+          editingTodo,
+          newLabel,
+          editInputs,
+          hasTodo,
+          maxId,
+          activeTodos,
+          activeCount,
+          completedTodos,
+          filteredTodos,
+          addTodo,
+          removeTodo,
+          removeCompletedTodos,
+          toggleAllTodos,
+          enableTodoEdition,
+          disableTodoEdition,
+          isEditing,
+          updateEditingTodo
+        }
+      }
+    });
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
