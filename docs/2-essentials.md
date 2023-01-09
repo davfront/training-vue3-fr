@@ -4,6 +4,29 @@
 
 Voir : [https://vuejs.org/guide/essentials/application.html](https://vuejs.org/guide/essentials/application.html)
 
+## Sommaire<!-- omit from toc -->
+
+- [Syntaxe de template](#syntaxe-de-template)
+  - [Interpolation de texte](#interpolation-de-texte)
+  - [Directive `v-html`](#directive-v-html)
+  - [Directive `v-bind`](#directive-v-bind)
+  - [Directives `v-if`, `v-else-if` et `v-else`](#directives-v-if-v-else-if-et-v-else)
+  - [Directive `v-show`](#directive-v-show)
+  - [Directive `v-for`](#directive-v-for)
+  - [Directive `v-on`](#directive-v-on)
+  - [Directive `v-model`](#directive-v-model)
+  - [Modificateurs de directives](#modificateurs-de-directives)
+- [API d'options](#api-doptions)
+  - [Option `data`](#option-data)
+  - [Option `computed`](#option-computed)
+  - [Option `methods`](#option-methods)
+  - [Option `watch`](#option-watch)
+  - [Lifecycle hooks](#lifecycle-hooks)
+- [Liaisons de classes et de styles](#liaisons-de-classes-et-de-styles)
+  - [Liaison de classes `v-bind:class`](#liaison-de-classes-v-bindclass)
+  - [Liaison de styles `v-bind:style`](#liaison-de-styles-v-bindstyle)
+- [Attributs speciaux](#attributs-speciaux)
+
 ## Syntaxe de template
 
 ### Interpolation de texte

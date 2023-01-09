@@ -2,6 +2,24 @@
 
 # Structuration de l'application avec les composants Vue
 
+## Sommaire<!-- omit from toc -->
+
+- [Présentation](#présentation)
+- [Composants monofichiers avec Vite](#composants-monofichiers-avec-vite)
+  - [Avantages](#avantages)
+  - [Fichier séparés](#fichier-séparés)
+  - [Vite](#vite)
+- [Déclaration de composants](#déclaration-de-composants)
+  - [Déclaration globale](#déclaration-globale)
+  - [Déclaration locale](#déclaration-locale)
+- [Communication entre composants](#communication-entre-composants)
+  - [Props](#props)
+  - [Evénements](#evénements)
+  - [Utilisation de `v-model` sur un composant](#utilisation-de-v-model-sur-un-composant)
+  - [Héritage des attributs](#héritage-des-attributs)
+  - [Slots](#slots)
+  - [Provide / inject](#provide--inject)
+
 ## Présentation
 
 Voir : [Components Basics](https://vuejs.org/guide/essentials/component-basics.html)

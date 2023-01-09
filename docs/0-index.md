@@ -1,24 +1,23 @@
-
 # Construisez des sites Web dynamiques avec Vue.js
 
 ## Sommaire
 
 - [Introduction et Outils](1-introduction.md)
-  - Présentation
-  - Un framework progressif
-  - Composants monofichiers
-  - API d'options et API de composition
-  - Outils
+  - [Présentation](1-introduction.md#présentation)
+  - [Un framework progressif](1-introduction.md#un-framework-progressif)
+  - [Composants monofichiers](1-introduction.md#composants-monofichiers)
+  - [API d'options et API de composition](1-introduction.md#api-doptions-et-api-de-composition)
+  - [Outils](1-introduction.md#outils)
 - [Fondamentaux avec l'API d'options](2-essentials.md)
-  - Syntaxe de template
-  - API d'options
-  - Liaisons de classes et de styles
-  - Attributs speciaux
+  - [Syntaxe de template](2-essentials.md#syntaxe-de-template)
+  - [API d'options](2-essentials.md#api-doptions)
+  - [Liaisons de classes et de styles](2-essentials.md#liaisons-de-classes-et-de-styles)
+  - [Attributs speciaux](2-essentials.md#attributs-speciaux)
 - [Structuration de l'application avec les composants Vue](3-components.md)
-  - Présentation
-  - Composants monofichiers avec Vite
-  - Déclaration de composants
-  - Communication entre composants
+  - [Présentation](3-components.md#présentation)
+  - [Composants monofichiers avec Vite](3-components.md#composants-monofichiers-avec-vite)
+  - [Déclaration de composants](3-components.md#déclaration-de-composants)
+  - [Communication entre composants](3-components.md#communication-entre-composants)
 - [API de composition](4-composition-api.md)
 - [Routage avec Vue Router](5-vue-router.md)
 - [State management avec Pinia](6-pinia.md)

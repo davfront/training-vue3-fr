@@ -4,6 +4,16 @@
 
 Voir : [Vue.js - Introduction](https://vuejs.org/guide/introduction.html)
 
+## Sommaire<!-- omit from toc -->
+
+- [Présentation](#présentation)
+- [Un framework progressif](#un-framework-progressif)
+- [Composants monofichiers](#composants-monofichiers)
+- [API d'options et API de composition](#api-doptions-et-api-de-composition)
+  - [API d'options](#api-doptions)
+  - [API de composition](#api-de-composition)
+- [Outils](#outils)
+
 ## Présentation
 
 Vue.js est un framework JavaScript open-source pour la création d'applications web interactives. Il a été créé par Evan You et est devenu très populaire pour sa simplicité et sa flexibilité.
