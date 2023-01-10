@@ -42,6 +42,7 @@
 ## Divers
 
 - [Configurer ESLint et Prettier dans VScode](91-configure-eslint-prettier-vscode.md)
+- [Créer un bouton personnalisé avec les styles de Bootstrap](92-button-with-bootstrap-css.md)
 
 ## Ressources
 
