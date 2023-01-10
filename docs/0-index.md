@@ -32,6 +32,12 @@
   - [Configuration](5-vue-router.md#configuration)
   - [Navigation programmatique](5-vue-router.md#navigation-programmatique)
 - [State management avec Pinia](6-pinia.md)
+  - [Présentation](6-pinia.md#présentation)
+  - [Installation](6-pinia.md#installation)
+  - [Définition d'un store](6-pinia.md#définition-dun-store)
+  - [Utilisation d'un store dans un composant](6-pinia.md#utilisation-dun-store-dans-un-composant)
+  - [Modifier le state sans les actions](6-pinia.md#modifier-le-state-sans-les-actions)
+  - [Observer les changements du state](6-pinia.md#observer-les-changements-du-state)
 - [Pour aller plus loin](7-misc.md)
 
 ## Ressources
