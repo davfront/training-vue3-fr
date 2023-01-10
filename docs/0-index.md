@@ -38,7 +38,10 @@
   - [Utilisation d'un store dans un composant](6-pinia.md#utilisation-dun-store-dans-un-composant)
   - [Modifier le state sans les actions](6-pinia.md#modifier-le-state-sans-les-actions)
   - [Observer les changements du state](6-pinia.md#observer-les-changements-du-state)
-- [Pour aller plus loin](7-misc.md)
+
+## Divers
+
+- [Configurer ESLint et Prettier dans VScode](91-configure-eslint-prettier-vscode.md)
 
 ## Ressources
 
