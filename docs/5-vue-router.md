@@ -1,8 +1,42 @@
 [← Sommaire](0-index.md)
 
-# [Draft] Routage avec Vue Router
+# Routage avec Vue Router
 
 Voir : [Vue Router](https://router.vuejs.org/)
+
+## Sommaire<!-- omit from toc -->
+
+- [Présentation](#présentation)
+- [Installation](#installation)
+  - [Sans compilation (CDN)](#sans-compilation-cdn)
+  - [Avec compilation (Vite)](#avec-compilation-vite)
+- [Composants `router-link` et `router-view`](#composants-router-link-et-router-view)
+  - [`router-link`](#router-link)
+  - [`router-view`](#router-view)
+- [Configuration](#configuration)
+  - [Routes dynamiques](#routes-dynamiques)
+  - [Routes imbriquées](#routes-imbriquées)
+  - [Props](#props)
+- [Navigation programmatique](#navigation-programmatique)
+  - [Option API](#option-api)
+  - [Composition API](#composition-api)
+
+## Présentation
+
+`Vue Router` est le routeur officiel pour Vue.js. Il s'intègre profondément à Vue.js pour rendre la création d'applications Single-PAge (SPA) avec Vue.js très facile.
+
+Les fonctionnalités incluent :
+
+- Mapping de routes imbriquées
+- Routing dynamique
+- Modulaire - Configuration de routeur basée sur les composants
+- Route params, query, wildcards
+- Effets de transition basé sur le système de transition de Vue.js
+- Contrôle de navigation fine
+- Liens avec classes CSS actives automatiques
+- Mode historique HTML5 ou mode hash
+- Comportement du scroll personnalisable
+- Encodage correct des URLs
 
 ## Installation
 
@@ -112,11 +146,37 @@ app.mount('#app')
 </template>
 ```
 
-## configuration
+## Composants `router-link` et `router-view`
+
+Les composants `router-link` et `router-view` sont deux composants clés de `Vue Router` qui permettent de créer des liens de navigation et d'afficher les composants de route correspondants.
+
+```html
+<template>
+  <nav>
+    <router-link to="/">Go to Home</router-link>
+    <router-link to="/about">Go to About</router-link>
+  </nav>
+  <router-view></router-view>
+</template>
+```
+
+### `router-link`
+
+Au lieu d'utiliser des balises `a` normales, nous utilisons un composant personnalisé `router-link` pour créer des liens. Cela permet à `Vue Router` de changer l'URL sans recharger la page, de gérer la génération et l'encodage de l'URL.
+
+### `router-view`
+
+`router-view` affichera le composant qui correspond à l'URL. Vous pouvez le mettre n'importe où pour l'adapter à votre mise en page.
+
+## Configuration
 
 ### Routes dynamiques
 
+Vous allez très souvent associer des routes avec un motif donné à un même composant. Par exemple nous pourrions avoir le composant `User` qui devrait être rendu pour tous les utilisateurs mais avec différents identifiants. Avec vue-router nous pouvons utiliser des segments dynamiques dans le chemin de la route pour réaliser cela :
+
 ```js
+import User from '@/components/User.vue'
+
 const routes = [
   {
     path: '/users/:id',
@@ -127,13 +187,30 @@ const routes = [
 ```
 
 ```html
-<!-- User component -->
+<!-- User.vue -->
 <template>
   <div>User {{ $route.params.id }}</div>
 </template>
 ```
 
+Maintenant des URL comme `/users/12` et `/users/569` seront chacun associé à la même route.
+
 ### Routes imbriquées
+
+Les vraies interfaces utilisateurs d'application sont faites de composants imbriqués à de multiples niveaux de profondeur. Il est aussi très commun que les segments d'URL correspondent à une certaine structure de composants imbriqués, par exemple :
+
+```bash
+/utilisateur/foo/profil                  /utilisateur/foo/billets
++---------------------+                  +--------------------+
+| User                |                  | User               |
+| +-----------------+ |                  | +----------------+ |
+| | Profile         | |  +------------>  | | Posts          | |
+| |                 | |                  | |                | |
+| +-----------------+ |                  | +----------------+ |
++---------------------+                  +--------------------+
+```
+
+Avec `vue-router`, il est vraiment très simple d'exprimer cette relation en utilisant des configurations de route imbriquées.
 
 ```js
 const routes = [
@@ -159,6 +236,17 @@ const routes = [
 ]
 ```
 
+Le composant `User.vue` sera rendu dans une balise `<router-view>` de 1er niveau lorsque la route actuelle concorde (`/user/:id/*`).
+
+```html
+<!-- App.vue -->
+<template>
+  <RouterView />
+</template>
+```
+
+Le composant de rendu `User.vue` contiendra sa propre balise `<router-view>` :
+
 ```html
 <!-- User.vue -->
 <template>
@@ -175,9 +263,72 @@ const routes = [
 </template>
 ```
 
+L'option `children` dans la configuration du router permet alors de déterminer quel composant utiliser pour le rendu à l'intérieur de la balise imbriquée.
+
 ### Props
 
+Utiliser `$route` dans vos composants crée un couplage fort à la route qui va limiter la flexibilité du composant qui ne pourra être utilisé que par certains URL.
+
+Pour découpler un composant de son routeur, utilisez les `props` :
+
+On peut remplacer :
+
+```js
+const User = {
+  template: '<div>User {{ $route.params.id }}</div>'
+}
+const routes = [{ path: '/user/:id', component: User }]
+```
+
+par :
+
+```js
+const User = {
+  // make sure to add a prop named exactly like the route param
+  props: ['id'],
+  template: '<div>User {{ id }}</div>'
+}
+const routes = [{ path: '/user/:id', component: User, props: true }]
+```
+
+L'option `props` accepte plusieurs types : Booléen, Objet, Fonction.
+
+Exemple :
+
+```js
+const routes = [
+  // Mode Booleen
+  // Quand props est mis à true, le route.params est remplis en tant que props du composant.
+  {
+    path: '/user/:id',
+    component: User,
+    props: true
+  },
+
+  // Mode Objet
+  // Quand props est mis à true, le route.params est remplis en tant que props du composant.
+  {
+    path: '/promotion/from-newsletter',
+    component: Promotion,
+    props: { newsletterPopup: false }
+  },
+
+  // Mode Fonction
+  // Vous pouvez créer une fonction qui va retourner les props
+  // Danc cet exemple, l'URL "/search?q=vue" passerait {query: 'vue'} comme props au composant SearchUser.
+  {
+    path: '/search',
+    component: SearchUser,
+    props: (route) => ({ query: route.query.q })
+  }
+]
+```
+
 ## Navigation programmatique
+
+En plus de l'utilisation de `router-link` pour créer des liens de navigation pour le template, vou pouvez naviguer de manière programmatique en utilisant la méthode `push` de l'instance du routeur.
+
+L'argument peut être une chaine de caractère représentant un chemin, ou un objet de description de destination. Des exemples :
 
 ```js
 // literal string path
@@ -199,7 +350,7 @@ router.push({ path: '/about', hash: '#team' })
 
 ### Option API
 
-Vous pouvez utiliser `$router` et `$route` :
+Dans l'API d'options, vous accédez au router et à la route active en utilisant respectivement `$router` et `$route` :
 
 ```js
 export default {
@@ -217,9 +368,11 @@ export default {
 }
 ```
 
+`$router` et `$route` sont aussi accessibles depuis le template.
+
 ### Composition API
 
-Vous devez importer `useRouter` et `useRoute` :
+Dans l'API de composition, vous accédez au router et à la route active en important `useRouter` et `useRoute` :
 
 ```js
 import { useRouter, useRoute } from 'vue-router'
@@ -241,3 +394,7 @@ export default {
   }
 }
 ```
+
+---
+
+Découvrez les toutes fonctionnalités sur le site officiel de [VueRouter](https://router.vuejs.org/).

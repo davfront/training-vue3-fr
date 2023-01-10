@@ -26,6 +26,11 @@
   - [Composants monofichiers et `<script setup>`](4-composition-api.md#composants-monofichiers-et-script-setup)
   - [Composables et VueUse](4-composition-api.md#composables-et-vueuse)
 - [Routage avec Vue Router](5-vue-router.md)
+  - [Présentation](5-vue-router.md#présentation)
+  - [Installation](5-vue-router.md#installation)
+  - [Composants `router-link` et `router-view`](5-vue-router.md#composants-router-link-et-router-view)
+  - [Configuration](5-vue-router.md#configuration)
+  - [Navigation programmatique](5-vue-router.md#navigation-programmatique)
 - [State management avec Pinia](6-pinia.md)
 - [Pour aller plus loin](7-misc.md)
 
